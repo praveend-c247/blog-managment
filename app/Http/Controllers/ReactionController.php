@@ -53,7 +53,10 @@ class ReactionController extends Controller
     public function react(Request $request, $reactableType, $reactableId)
     {
         $user = auth()->user();
-        $newEmoji = $request->input('emoji');
+        $breakEmoji = explode('/',$request->input('emoji'));
+        
+        $newEmoji = $breakEmoji[0];
+        $type = $breakEmoji[1];
     
         $existingReaction = Reaction::where([
             'user_id' => $user->id,
@@ -64,7 +67,7 @@ class ReactionController extends Controller
             // User has already reacted
             if ($existingReaction->emoji !== $newEmoji) {
                 // If the user selected a different emoji, update the existing reaction
-                $existingReaction->update(['emoji' => $newEmoji]);
+                $existingReaction->update(['type'=>$type, 'emoji' => $newEmoji]);
             } else {
                 // If the user selected the same emoji, delete the existing reaction
                 $existingReaction->delete();
@@ -72,6 +75,7 @@ class ReactionController extends Controller
         } else {
             $reaction = new Reaction([
                 'user_id' => $user->id,
+                'type' => $type,
                 'emoji' => $newEmoji,
             ]);
             $reactable = app("App\\Models\\$reactableType")::findOrFail($reactableId);        

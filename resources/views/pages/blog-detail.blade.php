@@ -35,9 +35,12 @@
              <!-- Dropdown menu links -->
              <li>
                 <figure>
-                   @foreach($emojis as $emoji)
-                   <button type="submit" name="emoji" class="emojiBtn btn btn-outline-light" value="{{ $emoji }}">{{ $emoji }}</button>
-                   @endforeach
+                    @php
+                        $i=0;
+                    @endphp
+                    @foreach($emojis as $key1 => $emoji)
+                        <button type="submit" name="emoji" class="emojiBtn btn btn-outline-light" value="{{ $emoji }}/{{ ++$i }}">{{ $emoji }}</button>
+                    @endforeach
                 </figure>
              </li>
           </ul>

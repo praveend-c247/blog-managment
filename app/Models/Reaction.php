@@ -7,7 +7,7 @@ class Reaction extends Model
 {
     protected $table = 'reactions';
     protected $primaryKey = 'id';
-    protected $fillable = ['user_id', 'reactable_id', 'reactable_type', 'emoji'];
+    protected $fillable = ['user_id', 'reactable_id', 'reactable_type', 'type', 'emoji'];
 
     public function reactable()
     {
