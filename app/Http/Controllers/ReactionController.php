@@ -40,16 +40,6 @@ class ReactionController extends Controller
         return view('posts.show', compact('blog'));
     }
 
-    // public function react(Request $request, Blogs $blog)
-    // {
-    //     $reactionType = $request->input('reaction_type');
-
-    //     // React to the blog
-    //     $blog->react($reactionType);
-
-    //     return back();
-    // }
-
     public function react(Request $request, $reactableType, $reactableId)
     {
         $user = auth()->user();
@@ -64,12 +54,9 @@ class ReactionController extends Controller
             'reactable_id' => $reactableId,
         ])->first();        
         if ($existingReaction) {
-            // User has already reacted
-            if ($existingReaction->emoji !== $newEmoji) {
-                // If the user selected a different emoji, update the existing reaction
+            if ($existingReaction->emoji !== $newEmoji) {                
                 $existingReaction->update(['type'=>$type, 'emoji' => $newEmoji]);
             } else {
-                // If the user selected the same emoji, delete the existing reaction
                 $existingReaction->delete();
             }
         } else {

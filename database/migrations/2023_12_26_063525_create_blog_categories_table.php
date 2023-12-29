@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('blog_categories', function (Blueprint $table) {
             $table->id();
-            $table->integer('blogs_id');
-            $table->integer('categories_id');
+            $table->unsignedBigInteger('blogs_id')->index();
+            $table->unsignedBigInteger('categories_id')->index();
             $table->timestamps();
+            $table->foreign('blogs_id')->references('id')->on('blogs')->onDelete('cascade');
+            $table->foreign('categories_id')->references('id')->on('categories')->onDelete('cascade');
         });
     }
 

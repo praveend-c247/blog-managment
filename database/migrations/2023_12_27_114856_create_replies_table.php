@@ -14,9 +14,11 @@ return new class extends Migration
         Schema::create('replies', function (Blueprint $table) {
             $table->id();
             $table->text('body');
-            $table->unsignedBigInteger('user_id')->nullable(); // Make user_id nullable
-            $table->unsignedBigInteger('comments_id');
+            $table->unsignedBigInteger('user_id')->index()->nullable();
+            $table->unsignedBigInteger('comments_id')->index();
             $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('comments_id')->references('id')->on('comments')->onDelete('cascade');
         });
     }
 

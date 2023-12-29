@@ -21,10 +21,6 @@ class PagesController extends Controller
     public function HomePage(Request $request)
     {
         $blogList = Blogs::with('BlogCategories')->where('is_deleted',0)->get();
-        // $blogs = Blogs::leftJoin('blog_categories','blog_categories.blogs_id','=','blogs.id')
-        //                 ->where('blogs.is_deleted',0)
-        //                 ->select('blogs.*','blog_categories.categories_id')
-        //                 ->get();
         return view('pages.homepage',compact('blogList'));
     }
 
