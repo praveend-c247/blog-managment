@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\categories;
+use App\Models\Categories;
 
 class CategoriesSeeder extends Seeder
 {
@@ -25,6 +25,6 @@ class CategoriesSeeder extends Seeder
             ['categories_title' => 'Marketing'],
             ['categories_title' => 'Finance']
         ];
-        categories::insert($data);
+        Categories::insert($data);
     }
 }

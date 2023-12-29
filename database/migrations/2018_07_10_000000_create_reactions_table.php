@@ -27,7 +27,7 @@ class CreateReactionsTable extends Migration
             //     'reactable_type',
             //     'reactable_id',
             //     'user_id',
-            // ], 'react_user_unique','emoji');            
+            // ], 'react_user_unique');
         });
     }
 

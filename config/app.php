@@ -168,7 +168,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        DevDojo\LaravelReactions\Providers\ReactionsServiceProvider::class,
+        Qirolab\Laravel\Reactions\ReactionsServiceProvider::class,
     ])->toArray(),
 
     /*
