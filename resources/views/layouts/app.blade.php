@@ -14,12 +14,13 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <link href="{{ URL::to('/admin/bvalidator/dist/') }}/themes/gray/gray.css" rel="stylesheet" />
+    <link href="{{ URL::to('/admin/css/') }}/style.css" rel="stylesheet" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet">
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css'>
     <style type="text/css">
         .ck-editor__editable {
             min-height: 20px !important;
@@ -32,11 +33,10 @@
     <script src="{{ URL::to('/admin/ckeditor') }}/ckeditor.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
-    <!-- <script src="{{ URL::to('/admin/bvalidator/dist/') }}/jquery.min.js"></script> -->
-    <script src="{{ URL::to('/admin/bvalidator/dist/') }}/jquery.bvalidator.min.js"></script>
-    <script src="{{ URL::to('/admin/bvalidator/dist/') }}/themes/gray/gray.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js"></script>
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body>
@@ -101,6 +101,7 @@
         </main>
     </div>
 </body>
+<script type="text/javascript" src="{{ URL::To('/')}}/admin/js/custom.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         new DataTable('#example');
@@ -116,8 +117,8 @@
             maxDate: "+1M +10D",
             dateFormat: "yy-mm-dd"
         });
-
-        $('#bvalidatorForm').bValidator();
+        
+        $('#formValidate').validate();
 
         $('.timepicker').timepicker({
             timeFormat: 'h:mm p',
@@ -131,28 +132,45 @@
         });
 
         $('.js-example-basic-multiple').select2();
+        toastr.success("This is");
+        function showAlert() {
+            Swal.fire({
+                title: 'Hello!',
+                text: 'This is a SweetAlert2 dialog.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        }
     });
 
-    @if (Session::has('message'))
-        var type = "{{ Session::get('alert-type', 'info') }}"
-        switch (type) {
-            case 'success':
+        @if(Session::has('message'))
+            toastr.success("{{ session('message') }}");
+        @endif
 
-                toastr.options.timeOut = 10000;
-                toastr.success("{{ Session::get('message') }}");
-                var audio = new Audio('audio.mp3');
-                audio.play();
+        @if(Session::has('error'))
+            toastr.error("{{ session('error') }}");
+        @endif
 
-                break;
-            case 'error':
+    // @if (Session::has('message'))
+    //     var type = "{{ Session::get('alert-type', 'info') }}"
+    //     switch (type) {
+    //         case 'success':
 
-                toastr.options.timeOut = 10000;
-                toastr.error("{{ Session::get('message') }}");
-                var audio = new Audio('audio.mp3');
-                audio.play();
+    //             toastr.options.timeOut = 10000;
+    //             toastr.success("{{ Session::get('message') }}");
+    //             var audio = new Audio('audio.mp3');
+    //             audio.play();
 
-                break;
-        }
-    @endif   
+    //             break;
+    //         case 'error':
+
+    //             toastr.options.timeOut = 10000;
+    //             toastr.error("{{ Session::get('message') }}");
+    //             var audio = new Audio('audio.mp3');
+    //             audio.play();
+
+    //             break;
+    //     }
+    // @endif   
 </script>
 </html>

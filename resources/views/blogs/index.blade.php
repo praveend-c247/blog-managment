@@ -14,7 +14,7 @@
                 </div>
                 
                 <div class="card-body">
-                    <table id="example" class="display" style="width:100%">
+                    <table id="" class="display table table-striped" style="width:100%">
                         <thead>
                             <tr>
                                 <th>SR No.</th>
@@ -38,7 +38,7 @@
                                     <a href="{{ route('blogs.edit',$value->id) }}" class="btn btn-info d-inline me-2">
                                         <i class="fa fa-pencil" aria-hidden="true"></i>
                                     </a>
-                                    <form method="POST" action="{{ route('blogs.destroy',$value->id) }}" class="d-inline">
+                                    <form method="POST" data-route="{{ route('blogs.destroy',$value->id) }}" class="delete-form d-inline">
                                         @csrf 
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger d-inline"><i class="fa fa-trash"></i></button>
@@ -48,7 +48,9 @@
                             @endforeach
                         </tbody>
                     </table>
+
                 </div>
+                {!! $blog_list->links() !!}
             </div>
         </div>
     </div>

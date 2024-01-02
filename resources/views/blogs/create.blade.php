@@ -9,13 +9,13 @@
                 </div>
                 
                 <div class="card-body">
-                    <form method="POST" id="bvalidatorForm" class="bvalidatorForm" action="{{ route('blogs.store') }}" data-bvalidator-validate enctype="multipart/form-data">
+                    <form method="POST" id="formValidate" action="{{ route('blogs.store') }}"  enctype="multipart/form-data">
                         @csrf
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="title" class="">Title</label>
+                                <label for="title" class="">Title<span class="text-danger">*</span></label>
                             
-                                <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" placeholder="Enter Title" data-bvalidator="required">
+                                <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" placeholder="Enter Title"data-rule-required="true" data-rule-maxlength="25" data-msg-required="{{__('validationMessage.title')}}" data-msg-maxlength="{{__('validationMessage.title_max_len')}}">
                                 @error('title')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -23,8 +23,8 @@
                                 @enderror
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="title" class="">Categories</label>
-                                <select class="form-control js-example-basic-multiple @error('categories') is-invalid @enderror" name="categories[]" multiple="multiple">
+                                <label for="title" class="">Categories<span class="text-danger">*</span></label>
+                                <select class="form-control js-example-basic-multiple @error('categories') is-invalid @enderror" name="categories[]" multiple="multiple" data-rule-required="true" data-msg-required="{{__('validationMessage.title')}}">
                                     <option value="">Select Categories</option>
                                     @foreach($categoriesList as $key => $value)
                                         <option value="{{$value->id}}">{{$value->categories_title}}</option>
@@ -38,9 +38,9 @@
                                 @enderror
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="title" class="">Short Description</label>
+                                <label for="title" class="">Short Description<span class="text-danger">*</span></label>
 
-                                <textarea name="short_description" rows="4" placeholder="Enter Short Description" class="form-control @error('short_description') is-invalid @enderror"></textarea>
+                                <textarea name="short_description" rows="4" placeholder="Enter Short Description" class="form-control @error('short_description') is-invalid @enderror" data-rule-required="true" data-msg-required="{{__('validationMessage.short_description')}}"></textarea>
 
                                 @error('short_description')
                                     <span class="invalid-feedback" role="alert">
@@ -49,9 +49,9 @@
                                 @enderror
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="title" class="">Description</label>
+                                <label for="title" class="">Description<span class="text-danger">*</span></label>
 
-                                <textarea name="description" id="editor1" rows="1" placeholder="Enter Description" class="form-control  @error('description') is-invalid @enderror"></textarea>
+                                <textarea name="description" id="editor1" rows="1" placeholder="Enter Description" class="form-control  @error('description') is-invalid @enderror" data-rule-required="true" data-msg-required="{{__('validationMessage.description')}}"></textarea>
 
                                 @error('description')
                                     <span class="invalid-feedback" role="alert">
@@ -60,9 +60,9 @@
                                 @enderror
                             </div>
                             <div class="col-md-3 mb-3">
-                                <label for="title" class="">Image</label>
+                                <label for="title" class="">Image<span class="text-danger">*</span></label>
 
-                                <input type="file" name="blog_media[]" class="form-control @error('blog_media') is-invalid @enderror" multiple>
+                                <input type="file" name="blog_media[]" class="form-control @error('blog_media') is-invalid @enderror" multiple data-rule-required="true" data-msg-required="{{__('validationMessage.blog_media')}}">
 
                                 @error('blog_media')
                                     <span class="invalid-feedback" role="alert">
@@ -71,9 +71,9 @@
                                 @enderror
                             </div>
                             <div class="col-md-3 mb-3">
-                                <label for="title" class="">Tags</label>
+                                <label for="title" class="">Tags<span class="text-danger">*</span></label>
 
-                                <input type="text" name="tags" class="form-control @error('tags') is-invalid @enderror" placeholder="Enter Tag">
+                                <input type="text" name="tags" class="form-control @error('tags') is-invalid @enderror" placeholder="Enter Tag" data-rule-required="true" data-msg-required="{{__('validationMessage.tags')}}">
 
                                 @error('tags')
                                     <span class="invalid-feedback" role="alert">
@@ -82,9 +82,9 @@
                                 @enderror
                             </div>
                             <div class="col-md-3 mb-3">
-                                <label for="title" class="">Date </label>
+                                <label for="title" class="">Date <span class="text-danger">*</span></label>
 
-                                <input type="text" name="date" class="form-control @error('date') is-invalid @enderror" id="datepicker" placeholder="Enter Date">
+                                <input type="text" name="date" class="form-control @error('date') is-invalid @enderror" id="datepicker" placeholder="Enter Date" data-rule-required="true" data-msg-required="{{__('validationMessage.date')}}">
 
                                 @error('date')
                                     <span class="invalid-feedback" role="alert">
@@ -93,9 +93,9 @@
                                 @enderror
                             </div>
                             <div class="col-md-3 mb-3">
-                                <label for="title" class="">Time </label>
+                                <label for="title" class="">Time <span class="text-danger">*</span></label>
 
-                                <input type="text" name="time" class="form-control timepicker @error('time') is-invalid @enderror" id="timepicker" placeholder="Enter Time">
+                                <input type="text" name="time" class="form-control timepicker @error('time') is-invalid @enderror" id="timepicker" placeholder="Enter Time" data-rule-required="true" data-msg-required="{{__('validationMessage.time')}}">
 
                                 @error('time')
                                     <span class="invalid-feedback" role="alert">

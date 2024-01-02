@@ -10,11 +10,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\BlogCategories;
 use App\Models\Comments;
 use App\Models\Reaction;
+use Illuminate\Database\Eloquent\SoftDeletes; 
 
 
 class Blogs extends Model implements ReactableInterface
 {
-    use HasFactory, Reactable;
+    use HasFactory, Reactable, SoftDeletes;
 
     protected $table = 'blogs';
     protected $primaryKey = 'id';

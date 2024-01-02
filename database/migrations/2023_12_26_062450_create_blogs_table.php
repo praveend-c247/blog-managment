@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('is_active')->default('1')->nullable();
             $table->integer('is_deleted')->default('0')->nullable();
             $table->timestamps();
+            $table->softDeletes(); 
         });
     }
 
@@ -32,5 +33,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('blogs');
+        Schema::table('blogs', function (Blueprint $table) {
+            $table->dropSoftDeletes(); 
+        });
     }
 };

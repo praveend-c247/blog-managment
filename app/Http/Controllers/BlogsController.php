@@ -14,7 +14,7 @@ class BlogsController extends Controller
      */
     public function index()
     {
-        $blog_list = Blogs::where('is_deleted',0)->get();
+        $blog_list = Blogs::where('is_deleted',0)->paginate(4);
         return view('blogs.index',compact('blog_list'));
     }
 
@@ -33,7 +33,7 @@ class BlogsController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required',
+            'title' => 'required|max:25',
             'short_description' => 'required',
             'description' => 'required',
             'blog_media' => 'required',
@@ -41,6 +41,16 @@ class BlogsController extends Controller
             'time' => 'required',
             'tags' => 'required',
             'categories' => 'required'
+        ],[
+            'title' => __('validationMessage.title'),
+            'title.max' => __('validationMessage.title_max_len'),
+            'short_description' => __('validationMessage.short_description'),
+            'description' => __('validationMessage.description'),
+            'blog_media' => __('validationMessage.blog_media'),
+            'date' => __('validationMessage.date'),
+            'time' => __('validationMessage.time'),
+            'tags' => __('validationMessage.tags'),
+            'categories' => __('validationMessage.categories')
         ]);
         $blog = new Blogs();
         $blog->title = $request->title;
@@ -71,7 +81,7 @@ class BlogsController extends Controller
                 $blogCategories->save();
                 
             }
-            return redirect()->route('blogs.index')->with('success','Blog Create Successfully...');
+            return redirect()->route('blogs.index')->with('message','Blog Create Successfully...');
         }else{
             return redirect()->route('blogs.index')->with('error','SomeThing went to be wrong...');
         }
@@ -102,13 +112,23 @@ class BlogsController extends Controller
     public function update(Request $request, string $id)
     {
         $validated = $request->validate([
-            'title' => 'required',
+            'title' => 'required|max:25',
             'short_description' => 'required',
             'description' => 'required',
             'date' => 'required',
             'time' => 'required',
             'tags' => 'required',
             'categories' => 'required'
+        ],[
+            'title' => __('validationMessage.title'),
+            'title.max' => __('validationMessage.title_max_len'),
+            'short_description' => __('validationMessage.short_description'),
+            'description' => __('validationMessage.description'),
+            'blog_media' => __('validationMessage.blog_media'),
+            'date' => __('validationMessage.date'),
+            'time' => __('validationMessage.time'),
+            'tags' => __('validationMessage.tags'),
+            'categories' => __('validationMessage.categories')
         ]);
         $blog = Blogs::find($id);
         $blog->title = $request->title;
@@ -151,13 +171,13 @@ class BlogsController extends Controller
                 'message' => 'Blog Update Successfully...',
                 'alert-type' => 'success'
             );
-            return redirect()->route('blogs.index')->with($notification);
+            return redirect()->route('blogs.index')->with('message','Blog Update Successfully...');
         }else{
             $notification = array(
                 'message' => 'SomeThing went to be wrong...',
                 'alert-type' => 'error'
             );
-            return redirect()->route('blogs.index')->with($notification);
+            return redirect()->route('blogs.index')->with('error','SomeThing went to be wrong...');
         }
     }
 
@@ -167,8 +187,9 @@ class BlogsController extends Controller
     public function destroy(string $id)
     {
         $blog = Blogs::find($id);
-        $blog->is_deleted = 1;
-        if ($blog->update()) {
+        
+        // $blog->is_deleted = 1;
+        if ($blog->delete()) {
             $notification = array(
                 'message' => 'Blog Deleted Successfully...',
                 'alert-type' => 'success'
