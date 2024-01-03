@@ -23,8 +23,8 @@ class BlogStoreRequest extends FormRequest
     {
         return [
             'title' => 'required|max:25',
-            'short_description' => 'required',
-            'description' => 'required',
+            'short_description' => 'required|min:5|max:100',
+            'description' => 'required|min:250',
             'blog_media' => $this->id ? '' : 'required',
             'date' => 'required',
             'time' => 'required',
@@ -39,7 +39,10 @@ class BlogStoreRequest extends FormRequest
             'title' => __('validationMessage.title'),
             'title.max' => __('validationMessage.title_max_len'),
             'short_description' => __('validationMessage.short_description'),
+            'short_description.min' => __('validationMessage.short_description_min'),
+            'short_description.max' => __('validationMessage.short_description_max'),
             'description' => __('validationMessage.description'),
+            'description.min' => __('validationMessage.description_max'),
             'blog_media' => __('validationMessage.blog_media'),
             'date' => __('validationMessage.date'),
             'time' => __('validationMessage.time'),

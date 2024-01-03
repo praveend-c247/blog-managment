@@ -15,7 +15,7 @@
                             <div class="col-md-6">
                                 <label for="title" class="">Title<span class="text-danger">*</span></label>
                             
-                                <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" placeholder="Enter Title"data-rule-required="true" data-rule-maxlength="25" data-msg-required="{{__('validationMessage.title')}}" data-msg-maxlength="{{__('validationMessage.title_max_len')}}">
+                                <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" placeholder="Enter Title"data-rule-required="true"data-msg-required="{{__('validationMessage.title')}}" data-rule-maxlength="25" data-msg-maxlength="{{__('validationMessage.title_max_len')}}">
                                 @error('title')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -40,7 +40,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="title" class="">Short Description<span class="text-danger">*</span></label>
 
-                                <textarea name="short_description" rows="4" placeholder="Enter Short Description" class="form-control @error('short_description') is-invalid @enderror" data-rule-required="true" data-msg-required="{{__('validationMessage.short_description')}}"></textarea>
+                                <textarea name="short_description" rows="4" placeholder="Enter Short Description" class="form-control @error('short_description') is-invalid @enderror" data-rule-required="true" data-msg-required="{{__('validationMessage.short_description')}}" data-rule-minlength="5" data-msg-minlength="{{__('validationMessage.short_description_min')}}" data-rule-maxlength="100" data-msg-maxlength="{{__('validationMessage.short_description_max')}}"></textarea>
 
                                 @error('short_description')
                                     <span class="invalid-feedback" role="alert">
@@ -51,7 +51,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="title" class="">Description<span class="text-danger">*</span></label>
 
-                                <textarea name="description" id="editor1" rows="1" placeholder="Enter Description" class="form-control  @error('description') is-invalid @enderror" data-rule-required="true" data-msg-required="{{__('validationMessage.description')}}"></textarea>
+                                <textarea name="description" id="editor1" rows="1" placeholder="Enter Description" class="form-control  @error('description') is-invalid @enderror" data-rule-required="true" data-msg-required="{{__('validationMessage.description')}}" data-rule-minlength="250" data-msg-minlength="{{__('validationMessage.description_min')}}"></textarea>
 
                                 @error('description')
                                     <span class="invalid-feedback" role="alert">

@@ -11,6 +11,11 @@ use App\Models\{ Blogs, Categories, BlogCategories };
 
 class BlogsController extends Controller
 {
+    public function __construct(private BlogService $blogService)
+    {
+        $this->blogService = $blogService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -34,40 +39,13 @@ class BlogsController extends Controller
      */
     public function store(BlogStoreRequest $request)
     {
-        (new BlogService())->storeBlog($request->validated());
-        // $blog = new Blogs();
-        // $blog->title = $request->title;
-        // $blog->short_description = $request->short_description;
-        // $blog->description = $request->description;
-        // $fileArray = [];
-        // if(isset($request->blog_media)){
-        //     foreach ($request->blog_media as $key => $value) {
-        //         $destinationPath = 'uploads/blog_media';
-        //         $file = $value->getClientOriginalName();
-        //         $name = explode('.',$file);
-        //         $file_name = $name[0].time();
-        //         $extension = $value->getClientOriginalExtension();
-        //         $fileName = $file_name.'.'.$extension;
-        //         $value->move($destinationPath,$fileName);
-        //         $fileArray[] = $destinationPath.'/'.$fileName;
-        //     }
-        // }
-        // $blog->blog_media = json_encode($fileArray);
-        // $blog->date = $request->date;
-        // $blog->time = $request->time;
-        // $blog->tags = $request->tags;
-        // if ($blog->save()) {
-        //     foreach ($request->categories as $cat_key => $cat_value) {
-        //         $blogCategories = new BlogCategories();
-        //         $blogCategories->blogs_id = $blog->id;
-        //         $blogCategories->categories_id = $cat_value;
-        //         $blogCategories->save();
-                
-        //     }
-        //     return redirect()->route('blogs.index')->with('message','Blog Create Successfully...');
-        // }else{
-        //     return redirect()->route('blogs.index')->with('error','SomeThing went to be wrong...');
-        // }
+        $this->blogService->storeBlog($request->validated());
+
+        if ($blog) {
+            return redirect()->route('blogs.index')->with('message','Blog Create Successfully...');
+        }else{
+            return redirect()->route('blogs.index')->with('error','SomeThing went to be wrong...');
+        }
     }
 
     /**
@@ -86,78 +64,26 @@ class BlogsController extends Controller
         $blog = array();
         $blog = Blogs::with('blogCategories')->where('id',$id)->first();
         $categoriesList = Categories::where('is_deleted',0)->get();
-        return view('blogs.edit',compact('blog','categoriesList'));
+        if (!empty($blog)) {
+            return view('blogs.edit',compact('blog','categoriesList'));   
+        }else{
+            return redirect()->route('blogs.index')->with('error','This Blog is not found...');
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(BlogStoreRequest $request, string $id)
+    public function update(BlogStoreRequest $request, Blogs $blog)
     {
-        (new BlogService())->storeBlog($request->validated(), $id);
+        $this->blogService->updateBlog($request->validated(), $blog);
 
         if ($blog) {
-            $notification = array(
-                'message' => 'Blog Update Successfully...',
-                'alert-type' => 'success'
-            );
             return redirect()->route('blogs.index')->with('message','Blog Update Successfully...');
         }else{
-            $notification = array(
-                'message' => 'SomeThing went to be wrong...',
-                'alert-type' => 'error'
-            );
             return redirect()->route('blogs.index')->with('error','SomeThing went to be wrong...');
         }
-        // $blog = Blogs::find($id);
-        // $blog->title = $request->title;
-        // $blog->short_description = $request->short_description;
-        // $blog->description = $request->description;
-        // $fileArray = [];
-        // if(isset($request->blog_media)){
-            
-        //     foreach ($request->blog_media as $key => $value) {
-        //         $destinationPath = 'uploads/blog_media';
-        //         $file = $value->getClientOriginalName();
-        //         $name = explode('.',$file);
-        //         $file_name = $name[0].time();
-        //         $extension = $value->getClientOriginalExtension();
-        //         $fileName = $file_name.'.'.$extension;
-        //         $value->move($destinationPath,$fileName);
-        //         $fileArray1[] = $destinationPath.'/'.$fileName;
-        //     }
-        //     $oldArray = json_decode($request->old_media);
-        //     $fileArray = array_merge($oldArray, $fileArray1);
-        // }else{
-        //     $fileArray = json_decode($request->old_media);
-        // }
         
-        // $blog->blog_media = json_encode($fileArray);
-        // $blog->date = $request->date;
-        // $blog->time = $request->time;
-        // $blog->tags = $request->tags;
-        
-        // if ($blog->update()) {
-        //     $deleteCategories = BlogCategories::where('blogs_id',$blog->id)->delete();
-        //     foreach ($request->categories as $cat_key => $cat_value) {
-        //         $blogCategories = new BlogCategories();
-        //         $blogCategories->blogs_id = $blog->id;
-        //         $blogCategories->categories_id = $cat_value;
-        //         $blogCategories->save();
-                
-        //     }
-        //     $notification = array(
-        //         'message' => 'Blog Update Successfully...',
-        //         'alert-type' => 'success'
-        //     );
-        //     return redirect()->route('blogs.index')->with('message','Blog Update Successfully...');
-        // }else{
-        //     $notification = array(
-        //         'message' => 'SomeThing went to be wrong...',
-        //         'alert-type' => 'error'
-        //     );
-        //     return redirect()->route('blogs.index')->with('error','SomeThing went to be wrong...');
-        // }
     }
 
     /**

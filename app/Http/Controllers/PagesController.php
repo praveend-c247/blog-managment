@@ -33,7 +33,11 @@ class PagesController extends Controller
                             ->select('type','emoji', \DB::raw('count(*) as count'))
                             ->groupBy('type','emoji')
                             ->get();
-        return view('pages.blog-detail',compact('blogDetail','emojis','reactionCounts'));
+        if (!empty($blogDetail)) {
+            return view('pages.blog-detail',compact('blogDetail','emojis','reactionCounts'));
+        }else{
+            return redirect('blogs')->with('error','This Blog is not found...');
+        }
     }
 
     public function BlogsPage(Request $request)

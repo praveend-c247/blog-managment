@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title', 50);
             $table->longText('short_description');
-            $table->longText('description');
+            $table->longText('description',250);
             $table->longText('blog_media');
             $table->date('date');
             $table->string('time');

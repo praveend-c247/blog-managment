@@ -24,16 +24,50 @@ class BlogService
                 $file_name = $name[0].time();
                 $extension = $value->getClientOriginalExtension();
                 $fileName = $file_name.'.'.$extension;
-                // $value->move($destinationPath,$fileName);
+                $value->move($destinationPath,$fileName);
                 $fileArray[] = $destinationPath.'/'.$fileName;
             }
         }
         $blogData['blog_media'] = json_encode($fileArray);
 
         $blog = Blogs::create($blogData);
-        $categoriesData = $newArray;
+        foreach ($blogData['categories'] as $cat_key => $cat_value) {
+            $blogCategories = new BlogCategories();
+            $blogCategories->blogs_id = $blog->id;
+            $blogCategories->categories_id = $cat_value;
+            $blogCategories->save();
+            
+        }
+        // $categoriesData = $newArray;
+        // $blog->blogCategories()->create($categoriesData);
 
-        $blog->blogCategories()->create($categoriesData);
+        return $blog;
+    }
+
+    public static function updateBlog(array $blogData, Blogs $blog): Blogs
+    {
+        if(isset($blogData['blog_media'])){
+            foreach ($blogData['blog_media'] as $key => $value) {
+                $destinationPath = 'uploads/blog_media';
+                $file = $value->getClientOriginalName();
+                $name = explode('.',$file);
+                $file_name = $name[0].time();
+                $extension = $value->getClientOriginalExtension();
+                $fileName = $file_name.'.'.$extension;
+                $value->move($destinationPath,$fileName);
+                $fileArray[] = $destinationPath.'/'.$fileName;
+            }
+            $blogData['blog_media'] = json_encode($fileArray);
+        }
+        $blog->update($blogData);
+        $deleteCategories = BlogCategories::where('blogs_id',$blog->id)->delete();
+        foreach ($blogData['categories'] as $cat_key => $cat_value) {
+            $blogCategories = new BlogCategories();
+            $blogCategories->blogs_id = $blog->id;
+            $blogCategories->categories_id = $cat_value;
+            $blogCategories->save();
+            
+        }
         return $blog;
     }
 }

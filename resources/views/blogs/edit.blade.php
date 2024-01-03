@@ -14,7 +14,7 @@
                         @method('PUT')
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="title" class="">Title</label>
+                                <label for="title" class="">Title<span class="text-danger">*</span></label>
                                 
                                 <input type="hidden" name="id" value="{{ $blog->id }}">
                                 <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" placeholder="Enter Title" value="{{ $blog->title }}" data-rule-required="true" data-msg-required="{{__('validationMessage.title')}}">
@@ -26,7 +26,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="title" class="">Categories</label>
+                                <label for="title" class="">Categories<span class="text-danger">*</span></label>
                                 @php
                                     $selected = [];
                                 @endphp
@@ -49,9 +49,9 @@
                                 @enderror
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="title" class="">Short Description</label>
+                                <label for="title" class="">Short Description<span class="text-danger">*</span></label>
 
-                                <textarea name="short_description" rows="4" placeholder="Enter Short Description" class="form-control @error('short_description') is-invalid @enderror" data-rule-required="true" data-msg-required="{{__('validationMessage.short_description')}}">{{ $blog->short_description }}</textarea>
+                                <textarea name="short_description" rows="4" placeholder="Enter Short Description" class="form-control @error('short_description') is-invalid @enderror" data-rule-required="true" data-msg-required="{{__('validationMessage.short_description')}}" data-rule-minlength="5" data-msg-minlength="{{__('validationMessage.short_description_min')}}" data-rule-maxlength="100" data-msg-maxlength="{{__('validationMessage.short_description_max')}}">{{ $blog->short_description }}</textarea>
 
                                 @error('short_description')
                                     <span class="invalid-feedback" role="alert">
@@ -60,9 +60,9 @@
                                 @enderror
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="title" class="">Description</label>
+                                <label for="title" class="">Description<span class="text-danger">*</span></label>
 
-                                <textarea name="description" id="editor1" rows="1" placeholder="Enter Description" class="@error('description') is-invalid @enderror" data-rule-required="true" data-msg-required="{{__('validationMessage.description')}}">{{ $blog->description }}</textarea>
+                                <textarea name="description" id="editor1" rows="1" placeholder="Enter Description" class="@error('description') is-invalid @enderror" data-rule-required="true" data-msg-required="{{__('validationMessage.description')}}" data-rule-minlength="250" data-msg-minlength="{{__('validationMessage.description_min')}}">{{ $blog->description }}</textarea>
 
                                 @error('description')
                                     <span class="invalid-feedback" role="alert">
@@ -86,7 +86,7 @@
                                 </div>
                             </div>
                             <div class="col-md-3 mb-3">
-                                <label for="title" class="">Tags</label>
+                                <label for="title" class="">Tags<span class="text-danger">*</span></label>
 
                                 <input type="text" name="tags" class="form-control @error('tags') is-invalid @enderror" placeholder="Enter Tag" value="{{ $blog->tags }}" data-rule-required="true" data-msg-required="{{__('validationMessage.tags')}}">
 
@@ -97,7 +97,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-3 mb-3">
-                                <label for="title" class="">Date </label>
+                                <label for="title" class="">Date<span class="text-danger">*</span> </label>
 
                                 <input type="text" name="date" class="form-control @error('date') is-invalid @enderror" id="datepicker" placeholder="Enter Date" value="{{ $blog->date }}" data-rule-required="true" data-msg-required="{{__('validationMessage.date')}}">
 
@@ -108,7 +108,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-3 mb-3">
-                                <label for="title" class="">Time </label>
+                                <label for="title" class="">Time <span class="text-danger">*</span></label>
 
                                 <input type="text" name="time" class="form-control @error('time') is-invalid @enderror timepicker" id="timepicker" placeholder="Enter Time" value="{{ $blog->time }}" data-rule-required="true" data-msg-required="{{__('validationMessage.time')}}">
 
