@@ -11,6 +11,7 @@ class BlogCategories extends Model
 {
     use HasFactory;
     protected $table = 'blog_categories';
+    protected $fillable = ['categories_id'];
     protected $primaryKey = 'id';
 
     public function Categories()

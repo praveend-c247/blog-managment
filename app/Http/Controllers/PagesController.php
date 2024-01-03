@@ -20,13 +20,13 @@ class PagesController extends Controller
 
     public function HomePage(Request $request)
     {
-        $blogList = Blogs::with('BlogCategories')->where('is_deleted',0)->get();
+        $blogList = Blogs::with('blogCategories')->where('is_deleted',0)->get();
         return view('pages.homepage',compact('blogList'));
     }
 
     public function BlogDetailPage(Request $request)
     {
-        $blogDetail = Blogs::with('BlogCategories','comments')->where('is_deleted',0)->where('id',$request->id)->first();
+        $blogDetail = Blogs::with('blogCategories','comments')->where('is_deleted',0)->where('id',$request->id)->first();
         $emojis = $this->emojis;
 
         $reactionCounts = Reaction::where('reactable_id', $request->id)
@@ -38,7 +38,7 @@ class PagesController extends Controller
 
     public function BlogsPage(Request $request)
     {
-        $blogList = Blogs::with('BlogCategories','comments')->where('is_deleted',0)->get();
+        $blogList = Blogs::with('blogCategories','comments')->where('is_deleted',0)->get();
         return view('pages.blog',compact('blogList'));
     }
     /**

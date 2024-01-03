@@ -29,12 +29,13 @@
     <!-- Scripts -->
 
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script src="{{ URL::to('/admin/ckeditor') }}/ckeditor.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>    
     <script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js"></script>
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -43,7 +44,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="{{ url('/home') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -79,6 +80,7 @@
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     <a href="{{ route('blogs.index')}}" class="dropdown-item">Blogs</a>
+                                    <a href="{{ route('blogs-list')}}" class="dropdown-item">Blogs Retrive</a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -105,6 +107,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         new DataTable('#example');
+        
 
         CKEDITOR.replace( 'editor1',{
             language: 'fr',
@@ -132,7 +135,7 @@
         });
 
         $('.js-example-basic-multiple').select2();
-        toastr.success("This is");
+        
         function showAlert() {
             Swal.fire({
                 title: 'Hello!',
@@ -142,7 +145,7 @@
             });
         }
     });
-
+        
         @if(Session::has('message'))
             toastr.success("{{ session('message') }}");
         @endif

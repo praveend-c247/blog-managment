@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Illuminate\Http\Request;
-use App\Models\Blogs;
-use App\Models\Categories;
-use App\Models\BlogCategories;
+use App\Services\BlogService;
+use App\Http\Requests\BlogStoreRequest;
+use App\Models\{ Blogs, Categories, BlogCategories };
+
 
 class BlogsController extends Controller
 {
@@ -14,7 +16,7 @@ class BlogsController extends Controller
      */
     public function index()
     {
-        $blog_list = Blogs::where('is_deleted',0)->paginate(4);
+        $blog_list = Blogs::where('is_deleted',0)->paginate(5);
         return view('blogs.index',compact('blog_list'));
     }
 
@@ -30,61 +32,42 @@ class BlogsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(BlogStoreRequest $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|max:25',
-            'short_description' => 'required',
-            'description' => 'required',
-            'blog_media' => 'required',
-            'date' => 'required',
-            'time' => 'required',
-            'tags' => 'required',
-            'categories' => 'required'
-        ],[
-            'title' => __('validationMessage.title'),
-            'title.max' => __('validationMessage.title_max_len'),
-            'short_description' => __('validationMessage.short_description'),
-            'description' => __('validationMessage.description'),
-            'blog_media' => __('validationMessage.blog_media'),
-            'date' => __('validationMessage.date'),
-            'time' => __('validationMessage.time'),
-            'tags' => __('validationMessage.tags'),
-            'categories' => __('validationMessage.categories')
-        ]);
-        $blog = new Blogs();
-        $blog->title = $request->title;
-        $blog->short_description = $request->short_description;
-        $blog->description = $request->description;
-        $fileArray = [];
-        if(isset($request->blog_media)){
-            foreach ($request->blog_media as $key => $value) {
-                $destinationPath = 'uploads/blog_media';
-                $file = $value->getClientOriginalName();
-                $name = explode('.',$file);
-                $file_name = $name[0].time();
-                $extension = $value->getClientOriginalExtension();
-                $fileName = $file_name.'.'.$extension;
-                $value->move($destinationPath,$fileName);
-                $fileArray[] = $destinationPath.'/'.$fileName;
-            }
-        }
-        $blog->blog_media = json_encode($fileArray);
-        $blog->date = $request->date;
-        $blog->time = $request->time;
-        $blog->tags = $request->tags;
-        if ($blog->save()) {
-            foreach ($request->categories as $cat_key => $cat_value) {
-                $blogCategories = new BlogCategories();
-                $blogCategories->blogs_id = $blog->id;
-                $blogCategories->categories_id = $cat_value;
-                $blogCategories->save();
+        (new BlogService())->storeBlog($request->validated());
+        // $blog = new Blogs();
+        // $blog->title = $request->title;
+        // $blog->short_description = $request->short_description;
+        // $blog->description = $request->description;
+        // $fileArray = [];
+        // if(isset($request->blog_media)){
+        //     foreach ($request->blog_media as $key => $value) {
+        //         $destinationPath = 'uploads/blog_media';
+        //         $file = $value->getClientOriginalName();
+        //         $name = explode('.',$file);
+        //         $file_name = $name[0].time();
+        //         $extension = $value->getClientOriginalExtension();
+        //         $fileName = $file_name.'.'.$extension;
+        //         $value->move($destinationPath,$fileName);
+        //         $fileArray[] = $destinationPath.'/'.$fileName;
+        //     }
+        // }
+        // $blog->blog_media = json_encode($fileArray);
+        // $blog->date = $request->date;
+        // $blog->time = $request->time;
+        // $blog->tags = $request->tags;
+        // if ($blog->save()) {
+        //     foreach ($request->categories as $cat_key => $cat_value) {
+        //         $blogCategories = new BlogCategories();
+        //         $blogCategories->blogs_id = $blog->id;
+        //         $blogCategories->categories_id = $cat_value;
+        //         $blogCategories->save();
                 
-            }
-            return redirect()->route('blogs.index')->with('message','Blog Create Successfully...');
-        }else{
-            return redirect()->route('blogs.index')->with('error','SomeThing went to be wrong...');
-        }
+        //     }
+        //     return redirect()->route('blogs.index')->with('message','Blog Create Successfully...');
+        // }else{
+        //     return redirect()->route('blogs.index')->with('error','SomeThing went to be wrong...');
+        // }
     }
 
     /**
@@ -101,7 +84,7 @@ class BlogsController extends Controller
     public function edit(string $id)
     {
         $blog = array();
-        $blog = Blogs::with('BlogCategories')->where('id',$id)->first();
+        $blog = Blogs::with('blogCategories')->where('id',$id)->first();
         $categoriesList = Categories::where('is_deleted',0)->get();
         return view('blogs.edit',compact('blog','categoriesList'));
     }
@@ -109,64 +92,11 @@ class BlogsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(BlogStoreRequest $request, string $id)
     {
-        $validated = $request->validate([
-            'title' => 'required|max:25',
-            'short_description' => 'required',
-            'description' => 'required',
-            'date' => 'required',
-            'time' => 'required',
-            'tags' => 'required',
-            'categories' => 'required'
-        ],[
-            'title' => __('validationMessage.title'),
-            'title.max' => __('validationMessage.title_max_len'),
-            'short_description' => __('validationMessage.short_description'),
-            'description' => __('validationMessage.description'),
-            'blog_media' => __('validationMessage.blog_media'),
-            'date' => __('validationMessage.date'),
-            'time' => __('validationMessage.time'),
-            'tags' => __('validationMessage.tags'),
-            'categories' => __('validationMessage.categories')
-        ]);
-        $blog = Blogs::find($id);
-        $blog->title = $request->title;
-        $blog->short_description = $request->short_description;
-        $blog->description = $request->description;
-        $fileArray = [];
-        if(isset($request->blog_media)){
-            
-            foreach ($request->blog_media as $key => $value) {
-                $destinationPath = 'uploads/blog_media';
-                $file = $value->getClientOriginalName();
-                $name = explode('.',$file);
-                $file_name = $name[0].time();
-                $extension = $value->getClientOriginalExtension();
-                $fileName = $file_name.'.'.$extension;
-                $value->move($destinationPath,$fileName);
-                $fileArray1[] = $destinationPath.'/'.$fileName;
-            }
-            $oldArray = json_decode($request->old_media);
-            $fileArray = array_merge($oldArray, $fileArray1);
-        }else{
-            $fileArray = json_decode($request->old_media);
-        }
-        
-        $blog->blog_media = json_encode($fileArray);
-        $blog->date = $request->date;
-        $blog->time = $request->time;
-        $blog->tags = $request->tags;
-        
-        if ($blog->update()) {
-            $deleteCategories = BlogCategories::where('blogs_id',$blog->id)->delete();
-            foreach ($request->categories as $cat_key => $cat_value) {
-                $blogCategories = new BlogCategories();
-                $blogCategories->blogs_id = $blog->id;
-                $blogCategories->categories_id = $cat_value;
-                $blogCategories->save();
-                
-            }
+        (new BlogService())->storeBlog($request->validated(), $id);
+
+        if ($blog) {
             $notification = array(
                 'message' => 'Blog Update Successfully...',
                 'alert-type' => 'success'
@@ -179,6 +109,55 @@ class BlogsController extends Controller
             );
             return redirect()->route('blogs.index')->with('error','SomeThing went to be wrong...');
         }
+        // $blog = Blogs::find($id);
+        // $blog->title = $request->title;
+        // $blog->short_description = $request->short_description;
+        // $blog->description = $request->description;
+        // $fileArray = [];
+        // if(isset($request->blog_media)){
+            
+        //     foreach ($request->blog_media as $key => $value) {
+        //         $destinationPath = 'uploads/blog_media';
+        //         $file = $value->getClientOriginalName();
+        //         $name = explode('.',$file);
+        //         $file_name = $name[0].time();
+        //         $extension = $value->getClientOriginalExtension();
+        //         $fileName = $file_name.'.'.$extension;
+        //         $value->move($destinationPath,$fileName);
+        //         $fileArray1[] = $destinationPath.'/'.$fileName;
+        //     }
+        //     $oldArray = json_decode($request->old_media);
+        //     $fileArray = array_merge($oldArray, $fileArray1);
+        // }else{
+        //     $fileArray = json_decode($request->old_media);
+        // }
+        
+        // $blog->blog_media = json_encode($fileArray);
+        // $blog->date = $request->date;
+        // $blog->time = $request->time;
+        // $blog->tags = $request->tags;
+        
+        // if ($blog->update()) {
+        //     $deleteCategories = BlogCategories::where('blogs_id',$blog->id)->delete();
+        //     foreach ($request->categories as $cat_key => $cat_value) {
+        //         $blogCategories = new BlogCategories();
+        //         $blogCategories->blogs_id = $blog->id;
+        //         $blogCategories->categories_id = $cat_value;
+        //         $blogCategories->save();
+                
+        //     }
+        //     $notification = array(
+        //         'message' => 'Blog Update Successfully...',
+        //         'alert-type' => 'success'
+        //     );
+        //     return redirect()->route('blogs.index')->with('message','Blog Update Successfully...');
+        // }else{
+        //     $notification = array(
+        //         'message' => 'SomeThing went to be wrong...',
+        //         'alert-type' => 'error'
+        //     );
+        //     return redirect()->route('blogs.index')->with('error','SomeThing went to be wrong...');
+        // }
     }
 
     /**
@@ -188,19 +167,30 @@ class BlogsController extends Controller
     {
         $blog = Blogs::find($id);
         
-        // $blog->is_deleted = 1;
         if ($blog->delete()) {
-            $notification = array(
-                'message' => 'Blog Deleted Successfully...',
-                'alert-type' => 'success'
-            );
-            return redirect()->route('blogs.index')->with($notification);
+            $response = ['status'=>'true','status_code'=>200,'msg'=>'Blog Delete Successfully...'];
         }else{
-            $notification = array(
-                'message' => 'SomeThing went to be wrong...',
-                'alert-type' => 'error'
-            );
-            return redirect()->route('blogs.index')->with($notification);
+            $response = ['status'=>'false','status_code'=>500,'msg'=>'SomeThing went to be wrong...'];
         }
+        return json_encode($response);die();
+    }
+
+    public function blogsList(Request $request)
+    {
+        $blog_list = DB::table('blogs')
+                    ->whereNotNull('deleted_at')
+                    ->paginate(5);
+        
+        return view('blogs.blog-retrive-list',compact('blog_list'));
+    }
+
+    public function blogRetrive($id)
+    {
+        if(Blogs::where('id', $id)->withTrashed()->restore()){
+            $response = ['status'=>'true','status_code'=>200,'msg'=>'Blog Retrive Successfully...'];
+        }else{
+            $response = ['status'=>'false','status_code'=>500,'msg'=>'SomeThing went to be wrong...'];
+        }
+        return json_encode($response);die();
     }
 }

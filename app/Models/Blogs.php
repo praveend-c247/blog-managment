@@ -18,9 +18,10 @@ class Blogs extends Model implements ReactableInterface
     use HasFactory, Reactable, SoftDeletes;
 
     protected $table = 'blogs';
+    protected $fillable = ['title','short_description','description','blog_media','date','time','tags'];
     protected $primaryKey = 'id';
 
-    public function Blogcategories()
+    public function blogCategories()
     {
         return $this->hasMany(BlogCategories::class)->with('Categories');
     }

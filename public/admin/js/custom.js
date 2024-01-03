@@ -1,39 +1,48 @@
 $(document).ready(function() {
-	$('.delete-form').on('submit', function(e) {
+	$('.confirmation-form').on('click', function(e) {
 	 	e.preventDefault();
-	  	var button = $(this);
 	  	
-
-	  Swal.fire({
-	    icon: 'warning',
-	      title: 'Are you sure you want to delete this record?',
-	      showDenyButton: false,
-	      showCancelButton: true,
-	      confirmButtonText: 'Yes'
-	  }).then((result) => {
-	    /* Read more about isConfirmed, isDenied below */
-	    if (result.isConfirmed) {
-	      $.ajax({
-	        type: 'post',
-	        headers: {
-	            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-	        },
-	        url: button.data('route'),
-	        data: {
-	          '_method': 'delete'
-	        },
-	        success: function (response, textStatus, xhr) {
-	        	Swal.fire(
-			      'Deleted!',
-			      'Your file has been deleted.',
-			      'success'
-			    ).then((result) =>{
-			    	window.location='/admin/blogs'
-			    })
-	        }
-	      });
-	    }
-	  });
-	  
+	  	var urlType = '', title = '', url = '', type = '';
+	  	var methodType = $(this).attr('data-methodType');
+	  	console.log(methodType);
+	  	if (methodType == 'restore') {
+	  		title = 'Are you sure you want to Retrive this record?';
+	  		url = $(this).data('url');
+	  		type = 'GET';
+	  		redirectUrl = '/admin/blogs-retrive';
+	  	} else if (methodType == 'delete'){
+	  		title = 'Are you sure you want to Delete this record?';
+	  		url = $(this).data('url');
+	  		type = 'DELETE';
+	  		redirectUrl = '/admin/blogs';
+	  	}
+	  	Swal.fire({
+	    	icon: 'warning',
+	      	title: title,
+	      	showDenyButton: false,
+	      	showCancelButton: true,
+	      	confirmButtonText: 'Yes'
+	  	}).then((result) => {
+	    	/* Read more about isConfirmed, isDenied below */
+		    if (result.isConfirmed) {
+		      $.ajax({
+		        type: type,
+		        headers: {
+		            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		        },
+		        url: url,
+		        success: function (response, textStatus, xhr) {
+		        	var res = JSON.parse(response);
+		        	if (res.status == true) {
+		        		toastr.success(res.msg);
+		        		window.location = redirectUrl;
+		        	}else{
+		        		toastr.success(res.msg);
+		        		window.location = redirectUrl;
+		        	}
+		        }
+		      });
+		    }
+	  	});
 	});
 });

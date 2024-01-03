@@ -44,6 +44,9 @@ Route::post('/reply/store', [ReplyController::class, 'store'])->name('reply.stor
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::group(['prefix' => 'admin'], function () {
-    Route::resource('blogs','App\Http\Controllers\BlogsController');
+    Route::resource('blogs','App\Http\Controllers\BlogsController')->middleware('auth');
+    Route::get('blogs-retrive',[App\Http\Controllers\BlogsController::class,'blogsList'])->name('blogs-list')->middleware('auth');
+
+    Route::get('restore/{id}', [App\Http\Controllers\BlogsController::class,'blogRetrive'])->name('blogs.restore');
 });
 
