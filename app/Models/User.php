@@ -23,6 +23,7 @@ class User extends Authenticatable implements ReactsInterface
         'name',
         'email',
         'password',
+        'role'
     ];
 
     /**
@@ -44,4 +45,22 @@ class User extends Authenticatable implements ReactsInterface
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Interact with the user's first name.
+     *
+     * @param  string  $value
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function role(): Attribute
+    {
+        return new Attribute(
+            get: fn ($value) =>  ["user", "admin", "manager"][$value],
+        );
+    }
+
+    public function roles()
+    {
+        return $this->belongsTo("App\Role");
+    }
 }

@@ -40,12 +40,7 @@ class BlogsController extends Controller
     public function store(BlogStoreRequest $request)
     {
         $this->blogService->storeBlog($request->validated());
-
-        if ($blog) {
-            return redirect()->route('blogs.index')->with('message','Blog Create Successfully...');
-        }else{
-            return redirect()->route('blogs.index')->with('error','SomeThing went to be wrong...');
-        }
+        return redirect()->route('admin.blogs.index')->with('message','Blog Create Successfully...');
     }
 
     /**
@@ -67,7 +62,7 @@ class BlogsController extends Controller
         if (!empty($blog)) {
             return view('blogs.edit',compact('blog','categoriesList'));   
         }else{
-            return redirect()->route('blogs.index')->with('error','This Blog is not found...');
+            return redirect()->route('admin.blogs.index')->with('error','This Blog is not found...');
         }
     }
 
@@ -79,9 +74,9 @@ class BlogsController extends Controller
         $this->blogService->updateBlog($request->validated(), $blog);
 
         if ($blog) {
-            return redirect()->route('blogs.index')->with('message','Blog Update Successfully...');
+            return redirect()->route('admin.blogs.index')->with('message','Blog Update Successfully...');
         }else{
-            return redirect()->route('blogs.index')->with('error','SomeThing went to be wrong...');
+            return redirect()->route('admin.blogs.index')->with('error','SomeThing went to be wrong...');
         }
         
     }

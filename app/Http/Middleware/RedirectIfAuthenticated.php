@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
+
 class RedirectIfAuthenticated
 {
     /**
@@ -17,14 +18,12 @@ class RedirectIfAuthenticated
      */
     public function handle(Request $request, Closure $next, string ...$guards): Response
     {
-        $guards = empty($guards) ? [null] : $guards;
-
-        foreach ($guards as $guard) {
-            if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
-            }
+        if (Auth::guard($guards)->check() && Auth::user()->role == 1) {
+            return redirect()->route("admin.dashboard");
+        } elseif (Auth::guard($guards)->check() && Auth::user()->role == 2) {
+            return redirect()->route("user.dashboard");
+        } else {
+            return $next($request);
         }
-
-        return $next($request);
     }
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\ReactionController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\PagesController;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,11 +43,14 @@ Route::post('/reply/store', [ReplyController::class, 'store'])->name('reply.stor
 //Admin Routes
 
 Auth::routes();
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::group(['prefix' => 'admin'], function () {
-    Route::resource('blogs','App\Http\Controllers\BlogsController')->middleware('auth');
-    Route::get('blogs-retrive',[App\Http\Controllers\BlogsController::class,'blogsList'])->name('blogs-list')->middleware('auth');
+
+Route::group(['as'=>'admin.','prefix' => 'admin','middleware'=>['auth','admin']], function () {
+    Route::get('dashboard', [HomeController::class, 'adminHome'])->name('dashboard');
+    Route::resource('blogs','App\Http\Controllers\BlogsController');
+    Route::get('blogs-retrive',[App\Http\Controllers\BlogsController::class,'blogsList'])->name('blogs-list');
 
     Route::get('restore/{id}', [App\Http\Controllers\BlogsController::class,'blogRetrive'])->name('blogs.restore');
 });
-
+Route::group(['as'=>'user.','prefix' => 'user','middleware'=>['auth','user']], function () {
+    Route::get('dashboard', [HomeController::class, 'index'])->name('dashboard');
+});

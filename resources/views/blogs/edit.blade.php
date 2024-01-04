@@ -9,7 +9,7 @@
                 </div>
                 
                 <div class="card-body">
-                    <form method="POST" id="formValidate" class="" action="{{ route('blogs.update',$blog->id) }}" enctype="multipart/form-data">
+                    <form method="POST" id="formValidate" class="" action="{{ route('admin.blogs.update',$blog->id) }}" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="row">
@@ -125,7 +125,7 @@
                                 <button type="submit" class="btn btn-primary">Update
                                 </button>
 
-                                <a href="{{ route('blogs.index')}}" class="btn btn-danger">Back</a>
+                                <a href="{{ route('admin.blogs.index')}}" class="btn btn-danger">Back</a>
                             </div>
                         </div>
                     </form>

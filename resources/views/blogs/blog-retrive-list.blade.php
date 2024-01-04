@@ -33,7 +33,7 @@
                                     <td>{{ $value->tags }}</td>
                                     <td>{{ $value->date }}</td>
                                     <td>
-                                        <a href="javascript::void(0)" class="confirmation-form d-inline btn btn-danger" data-url="{{ route('blogs.restore',$value->id)}}" data-methodType ="restore"><i class="fa fa-undo"></i></a>
+                                        <a href="javascript::void(0)" class="confirmation-form d-inline btn btn-danger" data-url="{{ route('admin.blogs.restore',$value->id)}}" data-methodType ="restore"><i class="fa fa-undo"></i></a>
                                        
                                     </td>
                                 </tr>

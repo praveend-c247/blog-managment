@@ -8,7 +8,7 @@
                 <div class="card-header">Blogs List
                     <div class="position-relative">
                         <div class="position-absolute top-0 end-0 translate-middle pb-4">
-                            <a href="{{ route('blogs.create')}}" class="btn btn-primary">Add New</a>
+                            <a href="{{ route('admin.blogs.create')}}" class="btn btn-primary">Add New</a>
                         </div>
                     </div>
                 </div>
@@ -36,11 +36,11 @@
                                     <td>{{ $value->tags }}</td>
                                     <td>{{ $value->date }}</td>
                                     <td>
-                                        <a href="{{ route('blogs.edit',$value->id) }}" class="btn btn-info d-inline me-2">
+                                        <a href="{{ route('admin.blogs.edit',$value->id) }}" class="btn btn-info d-inline me-2">
                                             <i class="fa fa-pencil" aria-hidden="true"></i>
                                         </a>
                                         
-                                        <a href="javascript::void(0)" class="confirmation-form d-inline btn btn-danger" data-url="{{ route('blogs.destroy',$value->id) }}" data-methodType ="delete"><i class="fa fa-trash"></i></a>
+                                        <a href="javascript::void(0)" class="confirmation-form d-inline btn btn-danger" data-url="{{ route('admin.blogs.destroy',$value->id) }}" data-methodType ="delete"><i class="fa fa-trash"></i></a>
 
                                     </td>
                                 </tr>
