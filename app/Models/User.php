@@ -9,6 +9,7 @@ use Qirolab\Laravel\Reactions\Contracts\ReactsInterface;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\SubscriptionPlans;
 
 class User extends Authenticatable implements ReactsInterface
 {
@@ -62,5 +63,10 @@ class User extends Authenticatable implements ReactsInterface
     public function roles()
     {
         return $this->belongsTo("App\Role");
+    }
+
+    public function subscriptionPlan()
+    {
+        return $this->belongsTo(SubscriptionPlans::class);
     }
 }

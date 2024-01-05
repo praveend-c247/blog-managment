@@ -15,7 +15,7 @@
                             <div class="col-md-6">
                                 <label for="title" class="">Title<span class="text-danger">*</span></label>
                             
-                                <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" placeholder="Enter Title"data-rule-required="true"data-msg-required="{{__('validationMessage.title')}}" data-rule-maxlength="25" data-msg-maxlength="{{__('validationMessage.title_max_len')}}">
+                                <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" placeholder="Enter Title" data-rule-required="true"data-msg-required="{{__('validationMessage.title')}}" data-rule-maxlength="25" data-msg-maxlength="{{__('validationMessage.title_max_len')}}">
                                 @error('title')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>

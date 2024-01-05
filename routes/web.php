@@ -1,11 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ReactionController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\ReplyController;
-use App\Http\Controllers\PagesController;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\{ReactionController, CommentController, ReplyController, PagesController, HomeController, SubscriptionsController};
+
 
 /*
 |--------------------------------------------------------------------------
@@ -27,18 +24,26 @@ Route::get('blog-detail/{id}',[App\Http\Controllers\PagesController::class,'Blog
 Route::get('/posts/{post}', [ReactionController::class, 'show'])->name('posts.show');
 Route::post('/posts/{post}/react', [ReactionController::class, 'react'])->name('posts.react');
 
-
 Route::get('/post/{post}', [PagesController::class, 'show'])->name('post.show');
 Route::post('/react/{reactableType}/{reactableId}', [ReactionController::class, 'react'])
     ->middleware('auth')
     ->name('react');
-
 
 // Comment Routes
 Route::post('/comment/store', [CommentController::class, 'store'])->name('comment.store');
 
 // Reply Routes
 Route::post('/reply/store', [ReplyController::class, 'store'])->name('reply.store');
+
+Route::group(['as'=>'user.', 'middleware'=>['auth','user']], function () {
+    Route::get('dashboard', [HomeController::class, 'index'])->name('dashboard');
+    Route::get('checkout/{id}', [PagesController::class,'checkOut'])->name('checkout');
+    Route::post('buy-now',[PagesController::class,'buyNow'])->name('buynow');
+});
+
+Route::resource('subscriptions', 'App\Http\Controllers\SubscriptionsController');
+
+
 
 //Admin Routes
 
@@ -50,7 +55,4 @@ Route::group(['as'=>'admin.','prefix' => 'admin','middleware'=>['auth','admin']]
     Route::get('blogs-retrive',[App\Http\Controllers\BlogsController::class,'blogsList'])->name('blogs-list');
 
     Route::get('restore/{id}', [App\Http\Controllers\BlogsController::class,'blogRetrive'])->name('blogs.restore');
-});
-Route::group(['as'=>'user.','prefix' => 'user','middleware'=>['auth','user']], function () {
-    Route::get('dashboard', [HomeController::class, 'index'])->name('dashboard');
 });

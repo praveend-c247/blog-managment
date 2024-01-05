@@ -13,4 +13,8 @@
 		'time' => 'The time field is required',
 		'tags' => 'The tags field is required',
 		'categories' => 'The categories field is required',
+		'name'=>'The name field is required',
+		'email'=>'The email field is required',
+		'contact_no'=>'The contact no field is required',
+		'address'=>'The address field is required',
 	];

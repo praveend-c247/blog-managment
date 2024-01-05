@@ -3,11 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Blogs;
-use App\Models\Reaction;
+use App\Services\CheckOutService;
+use App\Models\{Blogs, User, Reaction, SubscriptionPlans};
+use Auth;
 
 class PagesController extends Controller
 {
+    public function __construct(private CheckOutService $checkOutService)
+    {
+        $this->checkOutService = $checkOutService;
+    }
+
     private $emojis = ['👍', '❤️', '😂', '😲', '😢', '😡'];
 
     /**
@@ -26,17 +32,38 @@ class PagesController extends Controller
 
     public function BlogDetailPage(Request $request)
     {
-        $blogDetail = Blogs::with('blogCategories','comments')->where('is_deleted',0)->where('id',$request->id)->first();
-        $emojis = $this->emojis;
-
-        $reactionCounts = Reaction::where('reactable_id', $request->id)
-                            ->select('type','emoji', \DB::raw('count(*) as count'))
-                            ->groupBy('type','emoji')
-                            ->get();
-        if (!empty($blogDetail)) {
-            return view('pages.blog-detail',compact('blogDetail','emojis','reactionCounts'));
+        $userInfo = Auth::user();
+        if (!empty($userInfo)) {
+            $user = User::with('subscriptionPlan')->where('id',$userInfo->id)->first();
+            if ($user->blog_view_count < $user['subscriptionPlan']->blog_count || $userInfo->role == 1) {
+                $user->blog_view_count = $user->blog_view_count + 1;
+                $user->update();
+                $blogDetail = Blogs::with('blogCategories','comments')->where('is_deleted',0)->where('id',$request->id)->first();
+                $emojis = $this->emojis;
+                $reactionCounts = Reaction::where('reactable_id', $request->id)
+                                    ->select('type','emoji', \DB::raw('count(*) as count'))
+                                    ->groupBy('type','emoji')
+                                    ->get();
+                if (!empty($blogDetail)) {
+                    return view('pages.blog-detail',compact('blogDetail','emojis','reactionCounts'));
+                }else{
+                    return redirect('blogs')->with('error','This Blog is not found...');
+                }
+            }else{
+                return redirect('/')->with('limit_error', 'You have passed your current usage limit. Please upgrading your plan to continue uninterrupted access.');
+            }   
         }else{
-            return redirect('blogs')->with('error','This Blog is not found...');
+            $blogDetail = Blogs::with('blogCategories','comments')->where('is_deleted',0)->where('id',$request->id)->first();
+            $emojis = $this->emojis;
+            $reactionCounts = Reaction::where('reactable_id', $request->id)
+                                ->select('type','emoji', \DB::raw('count(*) as count'))
+                                ->groupBy('type','emoji')
+                                ->get();
+            if (!empty($blogDetail)) {
+                return view('pages.blog-detail',compact('blogDetail','emojis','reactionCounts'));
+            }else{
+                return redirect('blogs')->with('error','This Blog is not found...');
+            }
         }
     }
 
@@ -44,6 +71,21 @@ class PagesController extends Controller
     {
         $blogList = Blogs::with('blogCategories','comments')->where('is_deleted',0)->get();
         return view('pages.blog',compact('blogList'));
+    }
+
+    public function checkOut(Request $request)
+    {
+        $userInfo = Auth::user();
+        $subscriptionPlan = SubscriptionPlans::where('id',$request->id)->first();
+        
+        return view('pages.checkout',compact('userInfo','subscriptionPlan'));
+    }
+
+    public function buyNow(Request $request)
+    {
+        $this->checkOutService->checkOut($request);
+
+        return redirect('/')->with('order_success', 'Congratulations! Your plan upgrade was successful. Enjoy enhanced features.');
     }
     /**
      * Show the form for creating a new resource.

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Session;
+use Auth;
 
 class HomeController extends Controller
 {
@@ -33,6 +35,7 @@ class HomeController extends Controller
      */
     public function adminHome()
     {
+        Session::put('user_logged', 'Yes');
         return view('admin.dashboard');
     }
 }
